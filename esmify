@@ -1,0 +1,1 @@
+console.error("\nC:\\Users\\kubat\\OneDrive\\Bureau\\formations\\Angular\\prairie\\drone.js:3\nimport {getAllDrones} from './back/dronesRequests.js'\r\n^\nParseError: 'import' and 'export' may appear only with 'sourceType: module'");

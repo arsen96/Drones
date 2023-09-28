@@ -1,0 +1,16 @@
+[
+    {
+        "id":1,
+        "name":"Drone",
+        "long":43.300000,
+        "lat":-0.366667,
+        "type":"drone"
+    },
+    {
+        "id":2,
+        "name":"Drone",
+        "long":43.3084278,
+        "lat":-0.3607801,
+        "type":"drone"
+    }
+]

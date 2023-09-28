@@ -1,0 +1,172 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="leaflet/leaflet.css">
+    <style>
+        #map { height: 65vh;position:absolute;bottom:0;left:0;right:0; }
+
+        .interface{
+            display: flex;
+            height: 35vh;
+        }
+
+        .leftPart{
+            display: flex;
+            width: 30%;
+            flex-direction: column;
+            height: 100%;
+            align-items: center;
+            grid-gap: 10px;
+            background-color: firebrick;
+            justify-content: center;
+        }
+
+        .rightPart{
+            display: flex;
+            width: 70%;
+            height: 100%;
+            align-items: center;
+            grid-gap: 10px; 
+
+        }
+
+        .rightPart .addItems{
+            background: cyan;
+            width: 49%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .rightPart .manageItems{
+            background:coral;
+            width: 49%;
+            height: 100%;
+            display: flex;
+            grid-gap:5px;
+        }
+
+        .entrepot{
+            display: flex;
+            align-items: center;
+            height: 100%;
+        }
+
+        .newField{
+            margin-top:5px;
+        }
+
+        .drones{
+            display: flex;
+            flex-direction: column;
+            width: 50%;
+            grid-gap: 5px;
+            text-align: center;
+            overflow-y: auto;
+            height: 97%;
+        }
+
+        .entrepot{
+            display: flex;
+            flex-direction: column;
+            width: 50%;
+            padding:10px;
+            text-align: center;
+        }
+
+        .card{
+            background: white;
+             padding: 5px; 
+             border-radius: 10px;
+        }
+
+        .entrepotAdded{
+            display: flex;
+            flex-direction: column;
+            grid-gap: 5px;
+            width: 50%;
+            overflow-y: auto;
+            height: 97%;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+
+
+    <form>
+
+    </form>
+
+    <div class="interface">
+        <div class="leftPart">
+            <div class="selectionContainer">
+                <select id="drones-select">
+                    <option value="" class="defaultChoice">--Selectionner le drone--</option>
+                  </select>
+            </div>
+    
+            <div class="selectionContainer">
+                <select id="warehouse-select">
+                    <option value="" class="defaultChoice">--Selectionner l'entrepôt--</option>
+                  </select>
+            </div>
+            <button>Envoyer</button>
+        </div>
+
+        <div class="rightPart">
+            <div class="addItems">
+                <fieldset>
+                    <legend>Type d'ajout:</legend>
+                    <div>
+                      <input type="radio" id="drone" name="typeAjout" value="drone" checked />
+                      <label for="drone">Drone</label>
+                    </div>
+                  
+                    <div>
+                      <input type="radio" id="entrepot" name="typeAjout" value="entrepot" />
+                      <label for="entrepot">Entrepot</label>
+                    </div>
+                  
+                  </fieldset>
+
+                  <div class="entrepot">
+                    <form >
+                        <div class="newField">
+                            <label for="nomEntr">Nom: </label>
+                            <input type="text" id="nomEntr" name="nomEntr" /> 
+                        </div>
+                       
+                        <div class="newField">
+                            <label for="AdresseEnt">Adresse: </label>
+                            <input type="text" id="AdresseEnt" name="AdresseEnt" /> 
+                        </div>
+                        <button type="sumbit">Ajouter</button>
+                    </form>
+                  </div>
+              
+            </div>
+            
+            <div class="manageItems">
+                <div class="drones">
+                    <h2>Les drones</h2>
+                </div>
+                <div class="entrepotAdded">
+                    <h2>Les entrepôts</h2>
+                </div>
+            </div>
+        </div>
+       
+    </div>
+
+    <script src="leaflet/leaflet.js"></script>
+    <script src="./MovingMarker.js"></script>
+    <script type="module" src="dronesRequests.js"></script>
+    <!-- <script type="module" src="drone.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/6.1.0/rxjs.umd.js"></script>
+    <script src="bundle.js"></script>
+</body>
+</html>
