@@ -22,7 +22,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon back/mongodb.js",
-    "script": "watchify drone.js -p esmify -o bundle.js"
+    "socket": "nodemon back/socketio.js",
+    "script": "watchify drone.js -p esmify -o bundle.js",
+    "script2": "watchify drone2.js -p esmify -o bundle2.js"
   },
   "author": "",
   "license": "ISC",

@@ -1,6 +1,10 @@
 const map = L.map("map").setView([43.3, -0.366667], 15);
 import { getAllDrones, create, remove } from "./back/dronesRequests.js";
 import { fromEvent } from "rxjs";
+import {io} from 'socket.io-client'
+const socket = io("http://localhost:3000");
+
+
 
 
 L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -40,10 +44,11 @@ class LeafletMarker {
     if (!this.customText) {
       this.customText = `${this.name}`;
     }
-    const marker = L.marker([this.long, this.lat], { icon: this.icon })
+    const marker = L.marker([this.long, this.lat])
       .addTo(map)
       .bindPopup(this.customText)
       .openPopup();
+      
     if (this.marker) {
       map.removeLayer(this.marker);
     }
@@ -51,37 +56,47 @@ class LeafletMarker {
     return marker;
   }
 
-  startMovement(direction) {
+  async startMovement(direction) {
     map.removeLayer(this.marker);
 
     if (this.currentMovingMarker) {
       map.removeLayer(this.currentMovingMarker);
     }
+
     let destArrived = [
       [this.long, this.lat],
       [direction.long, direction.lat],
+      [this.long, this.lat]
     ];
-    let back = [
-      [direction.long, direction.lat],
-      [this.long, this.lat],
-    ];
+    
 
-    let distance = map.distance(destArrived[0], destArrived[1]);
+    let distance = map.distance(destArrived[0], destArrived[1],destArrived[0]);
     const distanceTotalKm = (distance / 1000).toFixed(1);
     let durationAnim = 1500 * distanceTotalKm;
+  
+
+    const iconData = { 
+      icon: this.icon,
+    }
+
+    let dataToSend = {
+      destArrived,
+      durationAnim,
+      iconData
+    }
 
     this.currentMovingMarker = L.Marker.movingMarker(
       destArrived,
       durationAnim,
-      { 
-        icon: this.icon,
-    }
+      iconData
     ).addTo(map);
+
+   
+    await fetch("http://localhost:3000/startMovement?marker="+JSON.stringify(dataToSend))
     this.currentMovingMarker.start();
     const p = L.polyline(destArrived).addTo(map);
 
     let playInterval;
-    let value = 0;
     let isMoving = () => {
       if (this.currentMovingMarker.isRunning()) {
         const res = this.currentMovingMarker.getLatLng();
@@ -101,24 +116,9 @@ class LeafletMarker {
       if (this.type === "drone") {
         this.customText = `Le drone numéro ${this.id} est bien arrivé à sa destination`;
       }
-      setTimeout(() => {
-        if (this.currentMovingMarker) {
-          map.removeLayer(this.currentMovingMarker);
-        }
-
-        this.currentMovingMarker = L.Marker.movingMarker(back, [durationAnim], {
-          icon: this.icon,
-          
-        }).addTo(map);
-        this.currentMovingMarker.start();
-        playInterval = setInterval(isMoving, latLngTimeout);
-        this.currentMovingMarker.on("end", (elem) => {
-          this.currentMovingMarker.bindPopup(
-            `${distanceTotalKm * 2} km parcourus`
-          );
-          map.removeLayer(p);
-        });
-      }, 2000);
+      this.currentMovingMarker.bindPopup(
+        `${distanceTotalKm * 2} km parcourus`
+      );
     });
   }
 }
@@ -132,6 +132,9 @@ let isAnimated = false;
 const addDronesPositions = async () => {
   drones = [];
   drones = await getAllDrones();
+
+
+  socket.emit('welcome', { message: 'Welcome!', id: socket.id });
   dronesObjects = [];
   warehouses = [];
 
@@ -150,6 +153,13 @@ const addDronesPositions = async () => {
       warehouses.push(currDrone);
     }
   });
+
+  const data = markers.map((currMarket) => {
+    return {lat:currMarket._latlng.lat,lng: currMarket._latlng.lng} 
+  })
+
+
+  fetch("http://localhost:3000/markersPosition?markers="+JSON.stringify(data))
   addSelectOptions();
 };
 
@@ -265,8 +275,6 @@ function addSelectOptions() {
         [2000],
         { icon: droneSelected.icon }
       ).addTo(map);
-
-    //   droneSelected.currentMovingMarker._icon.style.MozTransform = 'rotate(' + this.options.iconAngle + 'deg)';
 
 
       polyline = L.polyline(destArrived).addTo(map);
