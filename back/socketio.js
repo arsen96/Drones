@@ -17,7 +17,6 @@ app.use(cors({
 
 app.get('/startMovement', (req, res) => {
   io.emit("sendMarkerData",req.query.marker)
-  res.send('index.html');
 });
 
 

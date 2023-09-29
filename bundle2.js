@@ -24,7 +24,6 @@ socket.on("displayMarkers", (data) => {
 
 socket.on('sendMarkerData', (data) => {
     let currData = JSON.parse(data);
-    map.removeLayer()
     const currentMovingMarker = L.Marker.movingMarker(
         currData.destArrived,
         currData.durationAnim,

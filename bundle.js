@@ -121,7 +121,7 @@ class LeafletMarker {
       iconData
     };
     this.currentMovingMarker = L.Marker.movingMarker(destArrived, durationAnim, iconData).addTo(map);
-    await fetch("http://localhost:3000/startMovement?marker=" + JSON.stringify(dataToSend));
+    fetch("http://localhost:3000/startMovement?marker=" + JSON.stringify(dataToSend));
     this.currentMovingMarker.start();
     const p = L.polyline(destArrived).addTo(map);
     let playInterval;
@@ -273,6 +273,9 @@ function addSelectOptions() {
       droneSelected.currentMovingMarker = L.Marker.movingMarker(destArrived, [2000], {
         icon: droneSelected.icon
       }).addTo(map);
+
+      //   droneSelected.currentMovingMarker._icon.style.MozTransform = 'rotate(' + this.options.iconAngle + 'deg)';
+
       polyline = L.polyline(destArrived).addTo(map);
       droneSelected.currentMovingMarker.on("end", elem => {
         if (polyline) {
