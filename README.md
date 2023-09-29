@@ -1,7 +1,7 @@
 # Step by Step
 
 * Exec file index.html
-* npm install
+* npm install (See how work [npm](https://www.npmjs.com))
 * npm run dev
 * npm run script
 
